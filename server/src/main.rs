@@ -17,6 +17,7 @@ type WsStream = SplitStream<WebSocketStream<tokio::net::TcpStream>>;
 
 async fn handle_client(mut sink: WsSink, mut stream: WsStream, framebuffer: Arc<Mutex<Vec<u32>>>) {
     while let Some(Ok(_msg)) = stream.next().await {
+        //TODO: actually send frames
         // assign bytes in this scope to drop the framebuffer lock as soon as possible
         let bytes = {
             let framebuffer = framebuffer.lock().unwrap();
