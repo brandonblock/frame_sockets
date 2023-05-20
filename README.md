@@ -11,6 +11,11 @@ Receives frames from the server and displays them. Also sends mouse click events
 
 ## Feature Checklist:
 - [x] Server generates frames and sends them to the client
-- [ ] Client receives frames and displays them
+- [ ] Client receives frames and displays them in a window
 - [ ] Client sends mouse click events to the server
 - [ ] Server receives mouse click events from the client and draws them on the frame
+
+## Future Goals:
+- [ ] use [x11rb](https://crates.io/latest/x11rb) instead of [minifb](https://crates.io/crates/minifb)
+- use [webrtc](https://crates.io/crates/webrtc) instead of [tungstenite](https://crates.io/crates/tungstenite)
+_ clent render window to WASM
