@@ -17,5 +17,6 @@ Receives frames from the server and displays them. Also sends mouse click events
 
 ## Future Goals:
 - [ ] use [x11rb](https://crates.io/latest/x11rb) instead of [minifb](https://crates.io/crates/minifb)
+- [ ] encode stream using AV1
 - [ ] use [webrtc](https://crates.io/crates/webrtc) instead of [tungstenite](https://crates.io/crates/tungstenite)
 - [ ] clent render window to WASM
