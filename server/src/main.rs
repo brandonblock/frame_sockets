@@ -3,6 +3,7 @@ use futures_util::stream::SplitSink;
 use futures_util::stream::SplitStream;
 use futures_util::SinkExt;
 use futures_util::StreamExt;
+use std::println;
 use std::sync::{Arc, Mutex};
 use tokio::net::TcpListener;
 use tokio_tungstenite::WebSocketStream;
@@ -10,14 +11,37 @@ use tungstenite::protocol::Message;
 
 //window dimensions (SD)
 const WIDTH: usize = 640;
-const HEIGHT: usize = 480;
+const HEIGHT: usize = 360;
 
 type WsSink = SplitSink<WebSocketStream<tokio::net::TcpStream>, Message>;
 type WsStream = SplitStream<WebSocketStream<tokio::net::TcpStream>>;
 
 async fn handle_client(mut sink: WsSink, mut stream: WsStream, framebuffer: Arc<Mutex<Vec<u32>>>) {
-    while let Some(Ok(_msg)) = stream.next().await {
-        //TODO: actually send frames
+    let msg = Message::text("server tick");
+    println!("sent server tick");
+    sink.send(msg)
+        .await
+        .map_err(|e| println!("Failed to send message: {}", e))
+        .unwrap();
+
+    let mut message_count = 0;
+    while let Some(Ok(msg)) = stream.next().await {
+        if let Ok(msg) = msg.to_text() {
+            println!("{}", msg);
+            let mut parts = msg.split_whitespace();
+            let cmd = parts.next();
+            if let Some("click") = cmd {
+                println!("click");
+                let x = parts.next().unwrap_or("").parse::<usize>().unwrap_or(0);
+                let y = parts.next().unwrap_or("").parse::<usize>().unwrap_or(0);
+                if x < WIDTH && y < HEIGHT {
+                    let mut buffer = framebuffer.lock().unwrap();
+                    buffer[y * WIDTH + x] = 0xFFFFFFFF;
+                }
+            } else {
+                continue;
+            }
+        }
         // assign bytes in this scope to drop the framebuffer lock as soon as possible
         let bytes = {
             let framebuffer = framebuffer.lock().unwrap();
@@ -26,16 +50,27 @@ async fn handle_client(mut sink: WsSink, mut stream: WsStream, framebuffer: Arc<
             bytes
         };
         let msg = Message::binary(bytes);
-        if (sink.send(msg).await).is_err() {
+        if (sink.send(msg).await)
+            .map_err(|e| println!("Failed to send message: {}", e))
+            .is_err()
+        {
             break;
         }
+
+        println!("message_count: {}", message_count);
+        message_count += 1;
     }
 }
 
 #[tokio::main]
 async fn main() {
     // letting this unwrap() because if it fails, there's no point in continuing
-    let listener = TcpListener::bind("127.0.0.1:9001").await.unwrap();
+    let listener = {
+        match TcpListener::bind("localhost:9001").await {
+            Ok(listener) => listener,
+            Err(e) => panic!("Failed to bind: {}", e),
+        }
+    };
 
     let buffer = Arc::new(Mutex::new(vec![0; WIDTH * HEIGHT]));
 
