@@ -24,7 +24,6 @@ async fn handle_client(mut sink: WsSink, mut stream: WsStream, framebuffer: Arc<
         .map_err(|e| println!("Failed to send message: {}", e))
         .unwrap();
 
-    let mut message_count = 0;
     while let Some(Ok(msg)) = stream.next().await {
         if let Ok(msg) = msg.to_text() {
             println!("{}", msg);
@@ -56,9 +55,6 @@ async fn handle_client(mut sink: WsSink, mut stream: WsStream, framebuffer: Arc<
         {
             break;
         }
-
-        println!("message_count: {}", message_count);
-        message_count += 1;
     }
 }
 

@@ -53,21 +53,13 @@ async fn main() {
     // TODO: spawn thread (don;t forget 'move' to read and send mouse movements, check for rx.next in main while loop for framebuffers
 
     while window.is_open() && !window.is_key_down(Key::Escape) {
-        match write.send(Message::Text("client tick".to_string())).await {
-            Ok(_) => {}
-            Err(e) => {
-                println!("Failed to send client tick: {}", e);
-            }
-        }
-
-        sleep(std::time::Duration::from_millis(2)).await;
+        sleep(std::time::Duration::from_nanos(5)).await;
 
         // // assign bytes in this scope to drop the framebuffer lock as soon as possible
         // assign bytes in this scope to drop the framebuffer lock as soon as possible
-        if let Ok(Some(Ok(msg))) = timeout(Duration::from_nanos(1), read.next()).await {
+        if let Ok(Some(Ok(msg))) = timeout(Duration::from_nanos(10), read.next()).await {
             match msg {
                 Message::Binary(bytes) => {
-                    println!("binary");
                     // Assuming buffer is Vec<u32>
                     if bytes.len() == buffer.len() * 4 {
                         LittleEndian::read_u32_into(&bytes, &mut buffer);
@@ -81,20 +73,13 @@ async fn main() {
                         }
                     }
                 }
-                Message::Text(text) => {
-                    // handle text message
-                    println!("{}", text);
-                }
-                // handle other types of messages as necessary
                 _ => {
                     println!("other");
                 }
             }
         }
-        if let Some((x, y)) = window.get_mouse_pos(MouseMode::Discard) {
-            println!("got mouse position");
+        if let Some((x, y)) = window.get_mouse_pos(MouseMode::Pass) {
             // if window.get_mouse_down(MouseButton::Left) {
-            println!("clicked");
             // convert the coordinates to the format you want, then send it
             let msg = format!("click {} {}", x as usize, y as usize);
             match write.send(Message::Text(msg)).await {
