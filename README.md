@@ -25,4 +25,4 @@ Receives frames from the server and displays them. Also sends mouse click events
 - [ ] encrypt the framebuffers and mouse events indepedently of the enclosing stream
 
 ## To Run
-`cargo run` in each of the `server` and `client` directories (server first). Wiggle your mouse in the window that pops up and be amazed by the latency.
+Ensure there's a working Rust toolchain installed. Then run `cargo run` in each of the `server` and `client` directories (server first). Or build it if you like. Wiggle your mouse in the window that pops up and be amazed by the latency and jitter. See minifb docs for info on running in an environment other than MacOS.
