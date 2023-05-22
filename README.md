@@ -14,10 +14,10 @@ Receives frames from the server and displays them. Also sends mouse click events
 - [x] Client receives frames and displays them in a window
 - [x] Client sends mouse click events to the server
 - [x] Server receives mouse click events from the client and draws them on the frame
-- [ ] Everything happens in the right order
+- [ ] Client actions happens in the right order (appropriate threads, locks, and async fns)
 
 ## Future Goals:
-- [ ] stream an arbitrary application
-- [ ] encode stream using AV1
-- [ ] use [webrtc](https://crates.io/crates/webrtc) instead of [tungstenite](https://crates.io/crates/tungstenite)
-- [ ] run client in browser w/ WASM and ffmpeg
+- [ ] stream an arbitrary application (rusty-roguelike?)
+- [ ] encode stream using a video codec (AV1?)
+- [ ] use more robust stream type (WebRTC?)
+- [ ] run client in browser w/ WASM (and ffmpeg?)

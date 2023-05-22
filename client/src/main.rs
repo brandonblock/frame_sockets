@@ -50,7 +50,7 @@ async fn main() {
         println!("* {}", header);
     }
 
-    // TODO: spawn thread to read and send mouse movements, check for rx.next in main while loop for framebuffers
+    // TODO: spawn thread (don;t forget 'move' to read and send mouse movements, check for rx.next in main while loop for framebuffers
 
     while window.is_open() && !window.is_key_down(Key::Escape) {
         match write.send(Message::Text("client tick".to_string())).await {
