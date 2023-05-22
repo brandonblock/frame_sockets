@@ -1,6 +1,6 @@
 # frame_sockets
 
-Small prototype of a remote graphical environment server.
+Small prototype of a remote graphical environment server using [minifb](https://crates.io/crates/minifb) and websockets/[tokio-tungstenite](https://crates.io/crates/tokio-tungstenite).
 
 ## Server:
 Generates frames and sends them to the client via websockets. Also receives mouse click events from the client and draws them on the frame.
@@ -19,7 +19,7 @@ Receives frames from the server and displays them. Also sends mouse click events
 ## Future Goals:
 - [ ] stream an arbitrary application (rusty-roguelike?)
 - [ ] encode stream using a video codec (AV1?)
-- [ ] use more robust stream type (WebRTC?)
+- [ ] use more robust stream type (WebRTC/VNC?)
 - [ ] run client in browser w/ WASM (and ffmpeg?)
 - [ ] explore feasibility of running multiple threads each serving up a framebuffer to a different client
 
