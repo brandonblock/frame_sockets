@@ -11,9 +11,10 @@ Receives frames from the server and displays them. Also sends mouse click events
 
 ## Feature Checklist:
 - [x] Server generates frames and sends them to the client
-- [ ] Client receives frames and displays them in a window
-- [ ] Client sends mouse click events to the server
-- [ ] Server receives mouse click events from the client and draws them on the frame
+- [x] Client receives frames and displays them in a window
+- [x] Client sends mouse click events to the server
+- [x] Server receives mouse click events from the client and draws them on the frame
+- [ ] Everything happens in the right order
 
 ## Future Goals:
 - [ ] stream an arbitrary application

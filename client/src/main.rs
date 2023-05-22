@@ -50,6 +50,8 @@ async fn main() {
         println!("* {}", header);
     }
 
+    // TODO: spawn thread to read and send mouse movements, check for rx.next in main while loop for framebuffers
+
     while window.is_open() && !window.is_key_down(Key::Escape) {
         match write.send(Message::Text("client tick".to_string())).await {
             Ok(_) => {}
@@ -58,11 +60,11 @@ async fn main() {
             }
         }
 
-        sleep(std::time::Duration::from_millis(1)).await;
+        sleep(std::time::Duration::from_millis(2)).await;
 
         // // assign bytes in this scope to drop the framebuffer lock as soon as possible
         // assign bytes in this scope to drop the framebuffer lock as soon as possible
-        if let Ok(Some(Ok(msg))) = timeout(Duration::from_nanos(10), read.next()).await {
+        if let Ok(Some(Ok(msg))) = timeout(Duration::from_nanos(1), read.next()).await {
             match msg {
                 Message::Binary(bytes) => {
                     println!("binary");
