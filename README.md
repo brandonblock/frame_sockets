@@ -21,3 +21,6 @@ Receives frames from the server and displays them. Also sends mouse click events
 - [ ] encode stream using a video codec (AV1?)
 - [ ] use more robust stream type (WebRTC?)
 - [ ] run client in browser w/ WASM (and ffmpeg?)
+
+## To Run
+`cargo run` in each of the `server` and `client` directories (server first). Wiggle your mouse in the window that pops up and be amazed by the latency.
