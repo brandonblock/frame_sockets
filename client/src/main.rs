@@ -50,14 +50,14 @@ async fn main() {
         println!("* {}", header);
     }
 
-    // TODO: spawn thread (don;t forget 'move' to read and send mouse movements, check for rx.next in main while loop for framebuffers
-
+    // TODO: spawn threads to read and write to the socket via a channel
     while window.is_open() && !window.is_key_down(Key::Escape) {
-        sleep(std::time::Duration::from_nanos(5)).await;
+        //total forced-sync hack to get this stood up using a read timeout on the async socket
+        sleep(std::time::Duration::from_nanos(1)).await;
 
         // // assign bytes in this scope to drop the framebuffer lock as soon as possible
         // assign bytes in this scope to drop the framebuffer lock as soon as possible
-        if let Ok(Some(Ok(msg))) = timeout(Duration::from_nanos(10), read.next()).await {
+        if let Ok(Some(Ok(msg))) = timeout(Duration::from_nanos(1), read.next()).await {
             match msg {
                 Message::Binary(bytes) => {
                     // Assuming buffer is Vec<u32>

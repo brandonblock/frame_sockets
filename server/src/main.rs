@@ -17,13 +17,6 @@ type WsSink = SplitSink<WebSocketStream<tokio::net::TcpStream>, Message>;
 type WsStream = SplitStream<WebSocketStream<tokio::net::TcpStream>>;
 
 async fn handle_client(mut sink: WsSink, mut stream: WsStream, framebuffer: Arc<Mutex<Vec<u32>>>) {
-    let msg = Message::text("server tick");
-    println!("sent server tick");
-    sink.send(msg)
-        .await
-        .map_err(|e| println!("Failed to send message: {}", e))
-        .unwrap();
-
     while let Some(Ok(msg)) = stream.next().await {
         if let Ok(msg) = msg.to_text() {
             println!("{}", msg);
