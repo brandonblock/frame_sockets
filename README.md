@@ -22,7 +22,7 @@ Receives frames from the server and displays them. Also sends mouse click events
 - [ ] use more robust stream type (WebRTC/VNC?)
 - [ ] run client in browser w/ WASM (and ffmpeg?)
 - [ ] explore feasibility of running multiple threads each serving up a framebuffer stream to a different client
-- [ ] encrypt the framebuffers and mouse events
+- [ ] encrypt the framebuffers and mouse events indepedently of the enclosing stream
 
 ## To Run
 `cargo run` in each of the `server` and `client` directories (server first). Wiggle your mouse in the window that pops up and be amazed by the latency.
