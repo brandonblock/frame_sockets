@@ -14,7 +14,7 @@ Receives frames from the server and displays them. Also sends mouse click events
 - [x] Client receives frames and displays them in a window
 - [x] Client sends mouse movement events to the server
 - [x] Server receives mouse movementos events from the client and draws them on the frame
-- [ ] Client actions happens in the right order (appropriate threads, locks, and async fns)
+- [x] Client actions happens in the right order (latency and stability could be increased by using a thread-safe window library or decoupling the mouse events from the window display state)
 
 ## Future Goals:
 - [ ] stream an arbitrary application (rusty-roguelike?)
