@@ -17,6 +17,7 @@ type WsSink = SplitSink<WebSocketStream<tokio::net::TcpStream>, Message>;
 type WsStream = SplitStream<WebSocketStream<tokio::net::TcpStream>>;
 
 async fn handle_client(mut sink: WsSink, mut stream: WsStream, framebuffer: Arc<Mutex<Vec<u32>>>) {
+    let mut bytes = vec![0; framebuffer.lock().unwrap().len() * 4];
     while let Some(Ok(msg)) = stream.next().await {
         if let Ok(msg) = msg.to_text() {
             let mut parts = msg.split_whitespace();
@@ -33,13 +34,13 @@ async fn handle_client(mut sink: WsSink, mut stream: WsStream, framebuffer: Arc<
             }
         }
         // assign bytes in this scope to drop the framebuffer lock as soon as possible
-        let bytes = {
+        {
             let framebuffer = framebuffer.lock().unwrap();
-            let mut bytes = vec![0; framebuffer.len() * 4];
+            bytes.clear();
+            bytes.resize(framebuffer.len() * 4, 0);
             LittleEndian::write_u32_into(&framebuffer, &mut bytes);
-            bytes
         };
-        let msg = Message::binary(bytes);
+        let msg = Message::binary(bytes.clone());
         if (sink.send(msg).await)
             .map_err(|e| println!("Failed to send message: {}", e))
             .is_err()
