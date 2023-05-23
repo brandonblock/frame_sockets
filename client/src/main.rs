@@ -1,6 +1,6 @@
 use byteorder::{ByteOrder, LittleEndian};
 use futures::{SinkExt, StreamExt};
-use minifb::{Key, MouseButton, MouseMode, Scale, Window, WindowOptions};
+use minifb::{Key, MouseMode, Scale, Window, WindowOptions};
 use std::time::Duration;
 use tokio::time::sleep;
 use tokio::time::timeout;
@@ -12,7 +12,7 @@ const HEIGHT: usize = 360;
 
 #[tokio::main]
 async fn main() {
-    // create a window
+    // arrange window
     let mut buffer: Vec<u32> = vec![0; WIDTH * HEIGHT];
     let mut window = match Window::new(
         "Mouse Draw - Press ESC to exit",
@@ -37,10 +37,9 @@ async fn main() {
         }
     }
 
+    // create socket connection
     let url = url::Url::parse("ws://localhost:9001").unwrap();
-
     let (socket, response) = connect_async(url).await.unwrap();
-
     let (mut write, mut read) = socket.split();
 
     println!("Connected to the server");
@@ -50,15 +49,15 @@ async fn main() {
         println!("* {}", header);
     }
 
-    // TODO: spawn threads to read and write to the socket via a channel
+    // handle mouse and render events in the main loop
     while window.is_open() && !window.is_key_down(Key::Escape) {
         //total forced-sync hack to get this stood up using a read timeout on the async socket
         sleep(std::time::Duration::from_nanos(1)).await;
 
+        //read framebuffers from the socket for a very small amount of time
         if let Ok(Some(Ok(msg))) = timeout(Duration::from_nanos(1), read.next()).await {
             match msg {
                 Message::Binary(bytes) => {
-                    // Assuming buffer is Vec<u32>
                     if bytes.len() == buffer.len() * 4 {
                         LittleEndian::read_u32_into(&bytes, &mut buffer);
                     } else {
@@ -76,9 +75,8 @@ async fn main() {
                 }
             }
         }
+        // send our mouse position to the server
         if let Some((x, y)) = window.get_mouse_pos(MouseMode::Pass) {
-            // if window.get_mouse_down(MouseButton::Left) {
-            // convert the coordinates to the format you want, then send it
             let msg = format!("click {} {}", x as usize, y as usize);
             match write.send(Message::Text(msg)).await {
                 Ok(_) => {}
