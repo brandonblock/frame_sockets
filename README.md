@@ -12,8 +12,8 @@ Receives frames from the server and displays them. Also sends mouse click events
 ## Feature Checklist:
 - [x] Server generates frames and sends them to the client
 - [x] Client receives frames and displays them in a window
-- [x] Client sends mouse click events to the server
-- [x] Server receives mouse click events from the client and draws them on the frame
+- [x] Client sends mouse movement events to the server
+- [x] Server receives mouse movementos events from the client and draws them on the frame
 - [ ] Client actions happens in the right order (appropriate threads, locks, and async fns)
 
 ## Future Goals:

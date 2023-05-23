@@ -55,8 +55,6 @@ async fn main() {
         //total forced-sync hack to get this stood up using a read timeout on the async socket
         sleep(std::time::Duration::from_nanos(1)).await;
 
-        // // assign bytes in this scope to drop the framebuffer lock as soon as possible
-        // assign bytes in this scope to drop the framebuffer lock as soon as possible
         if let Ok(Some(Ok(msg))) = timeout(Duration::from_nanos(1), read.next()).await {
             match msg {
                 Message::Binary(bytes) => {

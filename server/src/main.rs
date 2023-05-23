@@ -19,11 +19,9 @@ type WsStream = SplitStream<WebSocketStream<tokio::net::TcpStream>>;
 async fn handle_client(mut sink: WsSink, mut stream: WsStream, framebuffer: Arc<Mutex<Vec<u32>>>) {
     while let Some(Ok(msg)) = stream.next().await {
         if let Ok(msg) = msg.to_text() {
-            println!("{}", msg);
             let mut parts = msg.split_whitespace();
             let cmd = parts.next();
             if let Some("click") = cmd {
-                println!("click");
                 let x = parts.next().unwrap_or("").parse::<usize>().unwrap_or(0);
                 let y = parts.next().unwrap_or("").parse::<usize>().unwrap_or(0);
                 if x < WIDTH && y < HEIGHT {
