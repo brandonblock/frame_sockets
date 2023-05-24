@@ -1,6 +1,6 @@
 # frame_sockets
 
-Small prototype of a remote graphical environment server using [minifb](https://crates.io/crates/minifb) and websockets/[tokio-tungstenite](https://crates.io/crates/tokio-tungstenite).
+Small prototype of a simple remote graphics rendering server using [minifb](https://crates.io/crates/minifb) and websockets/[tokio-tungstenite](https://crates.io/crates/tokio-tungstenite).
 
 ## Server:
 Generates frames and sends them to the client via websockets. Also receives mouse click events from the client and draws them on the frame.
